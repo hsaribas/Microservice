@@ -24,61 +24,57 @@ import com.tpe.repository.CarRepository;
 
 @Service
 public class CarService {
-	
-	@Autowired
-	private CarRepository carRepository;
-	
-	@Autowired
-	private ModelMapper modelMapper;
-	
-	@Autowired
-	RestTemplate restTemplate;
-	
-	@Autowired
-	private EurekaClient eurekaClient;
-	
-	
-	public void saveCar(CarRequest carRequest) {
-         Car car= modelMapper.map(carRequest, Car.class);
-		 carRepository.save(car);
-		 
-		 InstanceInfo instanceInfo= eurekaClient.getApplication("log-service").getInstances().get(0);
-		 
-		 String baseUrl= instanceInfo.getHomePageUrl();
-		 
-		 String path="/log";
-		 
-		 
-		 String servicePath=baseUrl+path;
-		 
-		 AppLogDTO appLogDTO=new AppLogDTO();
-		 appLogDTO.setLevel(AppLogLevel.INFO.getName());
-		 appLogDTO.setDescription("Save a Car:"+car.getId());
-		 appLogDTO.setTime(LocalDateTime.now());
-		 
-		 ResponseEntity<String> logResponse= restTemplate.postForEntity(servicePath, appLogDTO, String.class);
-		 
-		 if(!(logResponse.getStatusCode()==HttpStatus.CREATED)) {
-			 throw new LogException("Log not created");
-		 }
-		 
-	}
-	
-	public List<CarDTO> getAllCars(){
-		  List<Car> carList= carRepository.findAll();
-		  List<CarDTO> carDTOList= carList.stream().map(this::mapCarToCarDTO).collect(Collectors.toList());
-		  return carDTOList;
-		}
-	
-	private CarDTO mapCarToCarDTO(Car car) {
-		CarDTO carDTO= modelMapper.map(car, CarDTO.class);
-		return carDTO;
-	}
-	
-	public CarDTO getById(Long id) {
-		Car car=carRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Car not found with id:"+id));
-		CarDTO carDTO=mapCarToCarDTO(car);
-		return carDTO;
-	}
 
+    @Autowired
+    private CarRepository carRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
+
+    @Autowired
+    RestTemplate restTemplate;
+
+    @Autowired
+    private EurekaClient eurekaClient;
+
+    public void saveCar(CarRequest carRequest) {
+        Car car = modelMapper.map(carRequest, Car.class);
+        carRepository.save(car);
+
+        InstanceInfo instanceInfo = eurekaClient.getApplication("log-service").getInstances().get(0);
+
+        String baseUrl = instanceInfo.getHomePageUrl();
+
+        String path = "/log";
+
+        String servicePath = baseUrl + path;
+
+        AppLogDTO appLogDTO = new AppLogDTO();
+        appLogDTO.setLevel(AppLogLevel.INFO.getName());
+        appLogDTO.setDescription("Save a Car:" + car.getId());
+        appLogDTO.setTime(LocalDateTime.now());
+
+        ResponseEntity<String> logResponse = restTemplate.postForEntity(servicePath, appLogDTO, String.class);
+
+        if (!(logResponse.getStatusCode() == HttpStatus.CREATED)) {
+            throw new LogException("Log not created");
+        }
+    }
+
+    public List<CarDTO> getAllCars() {
+        List<Car> carList = carRepository.findAll();
+        List<CarDTO> carDTOList = carList.stream().map(this::mapCarToCarDTO).collect(Collectors.toList());
+        return carDTOList;
+    }
+
+    private CarDTO mapCarToCarDTO(Car car) {
+        CarDTO carDTO = modelMapper.map(car, CarDTO.class);
+        return carDTO;
+    }
+
+    public CarDTO getById(Long id) {
+        Car car = carRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Car not found with id:" + id));
+        CarDTO carDTO = mapCarToCarDTO(car);
+        return carDTO;
+    }
 }

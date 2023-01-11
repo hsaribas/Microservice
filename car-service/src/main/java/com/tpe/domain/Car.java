@@ -17,28 +17,26 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 
-@Table(name="t_car")
+@Table(name = "t_car")
 @Entity
 public class Car {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	
-	@Column(length = 30,nullable = false)
-	private String brand;
-	
-	@Column(length = 30,nullable = false)
-	private String model;
-	
-	@Column(nullable = false)
-	private Integer doors;
-	
-	@Column(nullable = false)
-	private Double pricePerHour;
-	
-	@Column(nullable = false)
-	private Integer age;
-	
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(length = 30, nullable = false)
+    private String brand;
+
+    @Column(length = 30, nullable = false)
+    private String model;
+
+    @Column(nullable = false)
+    private Integer doors;
+
+    @Column(nullable = false)
+    private Double pricePerHour;
+
+    @Column(nullable = false)
+    private Integer age;
 }

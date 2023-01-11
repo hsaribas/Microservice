@@ -13,24 +13,24 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 public class CarServiceApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(CarServiceApplication.class, args);
-	}
-	
-	@Bean
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
-	}
-	
-	@Bean
-	public ModelMapper modelMapper() {
-		ModelMapper modelMapper=new ModelMapper();
-		modelMapper.getConfiguration()
-		.setFieldMatchingEnabled(true)
-		.setFieldAccessLevel(AccessLevel.PRIVATE)
-		.setSourceNamingConvention(NamingConventions.JAVABEANS_MUTATOR);
-		return modelMapper;
-	}
-	
+    public static void main(String[] args) {
 
+		SpringApplication.run(CarServiceApplication.class, args);
+    }
+
+    @Bean
+    public RestTemplate restTemplate() {
+
+		return new RestTemplate();
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration()
+                .setFieldMatchingEnabled(true)
+                .setFieldAccessLevel(AccessLevel.PRIVATE)
+                .setSourceNamingConvention(NamingConventions.JAVABEANS_MUTATOR);
+        return modelMapper;
+    }
 }

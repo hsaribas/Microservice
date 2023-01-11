@@ -24,29 +24,27 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class CarController {
 
-	private CarService carService;
-	
-	@PostMapping
-	public ResponseEntity<Map<String, String>> saveCar(@RequestBody CarRequest carRequest) {
-		carService.saveCar(carRequest);
+    private CarService carService;
 
-		Map<String, String> map = new HashMap<>();
-		map.put("message", "Car Successfully saved");
-		map.put("success", "true");
-		return new ResponseEntity<>(map, HttpStatus.CREATED);
-	}
-	
-	@GetMapping
-	public ResponseEntity<List<CarDTO>> getAllCars(){
-		 List<CarDTO> allCars = carService.getAllCars();
-		 return ResponseEntity.ok(allCars);
-	}
-	
-	
-	@GetMapping("/{id}")
-	public ResponseEntity<CarDTO> getCar(@PathVariable Long id){
-		CarDTO carDTO= carService.getById(id);
-		return ResponseEntity.ok(carDTO);
-	}
-	
+    @PostMapping
+    public ResponseEntity<Map<String, String>> saveCar(@RequestBody CarRequest carRequest) {
+        carService.saveCar(carRequest);
+
+        Map<String, String> map = new HashMap<>();
+        map.put("message", "Car Successfully saved");
+        map.put("success", "true");
+        return new ResponseEntity<>(map, HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CarDTO>> getAllCars() {
+        List<CarDTO> allCars = carService.getAllCars();
+        return ResponseEntity.ok(allCars);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CarDTO> getCar(@PathVariable Long id) {
+        CarDTO carDTO = carService.getById(id);
+        return ResponseEntity.ok(carDTO);
+    }
 }
