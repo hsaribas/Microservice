@@ -13,23 +13,24 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 public class ReservationServiceApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ReservationServiceApplication.class, args);
-	}
-	
-	@Bean
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
-	}
-	
-	@Bean
-	public ModelMapper modelMapper() {
-		ModelMapper modelMapper=new ModelMapper();
-		modelMapper.getConfiguration()
-		.setFieldMatchingEnabled(true)
-		.setFieldAccessLevel(AccessLevel.PRIVATE)
-		.setSourceNamingConvention(NamingConventions.JAVABEANS_MUTATOR);
-		return modelMapper;
-	}
+    public static void main(String[] args) {
 
+		SpringApplication.run(ReservationServiceApplication.class, args);
+    }
+
+    @Bean
+    public RestTemplate restTemplate() {
+
+		return new RestTemplate();
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration()
+                .setFieldMatchingEnabled(true)
+                .setFieldAccessLevel(AccessLevel.PRIVATE)
+                .setSourceNamingConvention(NamingConventions.JAVABEANS_MUTATOR);
+        return modelMapper;
+    }
 }

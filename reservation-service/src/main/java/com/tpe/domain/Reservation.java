@@ -24,41 +24,37 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 
-@Table(name="t_reservation")
+@Table(name = "t_reservation")
 @Entity
 public class Reservation {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
-	private Long id;
-	
-	@Column(nullable = false)
-	private Long carId;
-	
-	@Column(nullable = false)
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long id;
+
+    @Column(nullable = false)
+    private Long carId;
+
+    @Column(nullable = false)
     private LocalDateTime pickUpTime;
 
     @Column(nullable = false)
     private LocalDateTime dropOffTime;
-
 
     @Column(length = 150, nullable = false)
     private String pickUpLocation;
 
     @Column(length = 150, nullable = false)
     private String dropOffLocation;
-	
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-	private ReservationStatus status;
-	
+    private ReservationStatus status;
+
     @Column(nullable = false)
     private Double totalPrice;
-	
-    
+
     public Long getTotalHours(LocalDateTime pickUpTime, LocalDateTime dropOffTime) {
         return ChronoUnit.HOURS.between(pickUpTime, dropOffTime);
     }
-    
-	
 }

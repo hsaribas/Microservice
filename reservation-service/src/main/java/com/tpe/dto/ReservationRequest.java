@@ -15,14 +15,13 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ReservationRequest {
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy HH:mm:ss")
-	private LocalDateTime pickUpTime;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy HH:mm:ss")
+    private LocalDateTime pickUpTime;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy HH:mm:ss")
-	private LocalDateTime dropOffTime;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy HH:mm:ss")
+    private LocalDateTime dropOffTime;
 
-	private String pickUpLocation;
+    private String pickUpLocation;
 
-	private String dropOffLocation;
-
+    private String dropOffLocation;
 }

@@ -28,89 +28,79 @@ import lombok.AllArgsConstructor;
 @Service
 @AllArgsConstructor
 public class ReservationService {
-	
-	private RestTemplate restTemplate;
-	
-	private ReservationRepository reservationRepository;
-	
-	private ModelMapper modelMapper;
-	
-	private EurekaClient eurekaClient;
-	
-	
 
-	public void saveReservation(Long carId, ReservationRequest reservationRequest) {
-		InstanceInfo instanceInfo= eurekaClient.getApplication("car-service").getInstances().get(0);
-		String baseUrl= instanceInfo.getHomePageUrl();
-		
-		String path="/car/";
-		
-		//localhost:8082/car/1
-		String servicePath=baseUrl+path+carId.toString();
-		ResponseEntity<CarDTO> carReponse= restTemplate.getForEntity(servicePath, CarDTO.class);
-		
-		if(!(carReponse.getStatusCode()==HttpStatus.OK)) {
-			throw new ResourceNotFoundException("Car not found with id:"+carId);
-		}
-		
-		CarDTO carDTO= carReponse.getBody();
-		
-		Reservation reservation=new Reservation();
-		
-		reservation.setCarId(carDTO.getId());
-		reservation.setPickUpTime(reservationRequest.getPickUpTime());
-		reservation.setDropOffTime(reservationRequest.getDropOffTime());
-		reservation.setPickUpLocation(reservationRequest.getPickUpLocation());
-		reservation.setDropOffLocation(reservationRequest.getDropOffLocation());
-		
-		reservation.setStatus(ReservationStatus.CREATED);
-		double tp= totalPrice(reservationRequest.getPickUpTime(), reservationRequest.getDropOffTime(),carDTO);
-		reservation.setTotalPrice(tp);
-		
-		reservationRepository.save(reservation);
-		
-		
-		InstanceInfo instanceInfoLog= eurekaClient.getApplication("log-service").getInstances().get(0);
-		 
-		 String baseUrlLog= instanceInfoLog.getHomePageUrl();
-		 
-		 String pathLog="/log";
-		 
-		 
-		 String servicePathLog=baseUrlLog+pathLog;
-		 
-		 AppLogDTO appLogDTO=new AppLogDTO();
-		 appLogDTO.setLevel(AppLogLevel.INFO.getName());
-		 appLogDTO.setDescription("Save a Reservation:"+reservation.getId());
-		 appLogDTO.setTime(LocalDateTime.now());
-		 
-		 ResponseEntity<String> logResponse= restTemplate.postForEntity(servicePathLog, appLogDTO, String.class);
-		 
-		 if(!(logResponse.getStatusCode()==HttpStatus.CREATED)) {
-			 throw new LogException("Log not created");
-		 }
-		
-		
-	}
-	
-	
-	public List<ReservationDTO> getAllReservations(){
-		List<Reservation> rList= reservationRepository.findAll();
-		
-		List<ReservationDTO> rDTOList= rList.stream().map(this::mapReservationToDTO).collect(Collectors.toList());
-		return rDTOList;
-	}
-	
-	private ReservationDTO mapReservationToDTO(Reservation reservation) {
-		ReservationDTO reservationDTO= modelMapper.map(reservation, ReservationDTO.class);
-		return reservationDTO;
-	}
-	
-	
-	private Double totalPrice(LocalDateTime pickUpTime, LocalDateTime dropOffTime, CarDTO carDTO) {
-	   Long hours=	(new Reservation()).getTotalHours(pickUpTime, dropOffTime);
-	   return carDTO.getPricePerHour()*hours;
-	}
-	
-	
+    private RestTemplate restTemplate;
+
+    private ReservationRepository reservationRepository;
+
+    private ModelMapper modelMapper;
+
+    private EurekaClient eurekaClient;
+
+    public void saveReservation(Long carId, ReservationRequest reservationRequest) {
+        InstanceInfo instanceInfo = eurekaClient.getApplication("car-service").getInstances().get(0);
+        String baseUrl = instanceInfo.getHomePageUrl();
+
+        String path = "/car/";
+
+        //localhost:8082/car/1
+        String servicePath = baseUrl + path + carId.toString();
+        ResponseEntity<CarDTO> carReponse = restTemplate.getForEntity(servicePath, CarDTO.class);
+
+        if (!(carReponse.getStatusCode() == HttpStatus.OK)) {
+            throw new ResourceNotFoundException("Car not found with id:" + carId);
+        }
+
+        CarDTO carDTO = carReponse.getBody();
+
+        Reservation reservation = new Reservation();
+
+        reservation.setCarId(carDTO.getId());
+        reservation.setPickUpTime(reservationRequest.getPickUpTime());
+        reservation.setDropOffTime(reservationRequest.getDropOffTime());
+        reservation.setPickUpLocation(reservationRequest.getPickUpLocation());
+        reservation.setDropOffLocation(reservationRequest.getDropOffLocation());
+
+        reservation.setStatus(ReservationStatus.CREATED);
+        double tp = totalPrice(reservationRequest.getPickUpTime(), reservationRequest.getDropOffTime(), carDTO);
+        reservation.setTotalPrice(tp);
+
+        reservationRepository.save(reservation);
+
+        InstanceInfo instanceInfoLog = eurekaClient.getApplication("log-service").getInstances().get(0);
+
+        String baseUrlLog = instanceInfoLog.getHomePageUrl();
+
+        String pathLog = "/log";
+
+        String servicePathLog = baseUrlLog + pathLog;
+
+        AppLogDTO appLogDTO = new AppLogDTO();
+        appLogDTO.setLevel(AppLogLevel.INFO.getName());
+        appLogDTO.setDescription("Save a Reservation:" + reservation.getId());
+        appLogDTO.setTime(LocalDateTime.now());
+
+        ResponseEntity<String> logResponse = restTemplate.postForEntity(servicePathLog, appLogDTO, String.class);
+
+        if (!(logResponse.getStatusCode() == HttpStatus.CREATED)) {
+            throw new LogException("Log not created");
+        }
+    }
+
+    public List<ReservationDTO> getAllReservations() {
+        List<Reservation> rList = reservationRepository.findAll();
+
+        List<ReservationDTO> rDTOList = rList.stream().map(this::mapReservationToDTO).collect(Collectors.toList());
+        return rDTOList;
+    }
+
+    private ReservationDTO mapReservationToDTO(Reservation reservation) {
+        ReservationDTO reservationDTO = modelMapper.map(reservation, ReservationDTO.class);
+        return reservationDTO;
+    }
+
+    private Double totalPrice(LocalDateTime pickUpTime, LocalDateTime dropOffTime, CarDTO carDTO) {
+        Long hours = (new Reservation()).getTotalHours(pickUpTime, dropOffTime);
+        return carDTO.getPricePerHour() * hours;
+    }
 }

@@ -24,26 +24,24 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class ReservationController {
 
-	private ReservationService reservationService;
-	
-	@PostMapping("/{carId}")
-	public ResponseEntity<Map<String,String>> 
-						saveReservation(@PathVariable Long carId,@RequestBody ReservationRequest reservationRequest){
-		
-		reservationService.saveReservation(carId, reservationRequest);
-		
-		Map<String,String> map=new HashMap<>();
-		map.put("message", "Reservation Successfully Created");
-		map.put("success", "true");
-		
-		return new ResponseEntity<>(map,HttpStatus.CREATED);
-				
-	}
-	
-	@GetMapping
-	public ResponseEntity<List<ReservationDTO>> getAllReservation(){
-		 List<ReservationDTO> allReservations = reservationService.getAllReservations();
-		 return ResponseEntity.ok(allReservations);
-	}
-	
+    private ReservationService reservationService;
+
+    @PostMapping("/{carId}")
+    public ResponseEntity<Map<String, String>>
+    saveReservation(@PathVariable Long carId, @RequestBody ReservationRequest reservationRequest) {
+
+        reservationService.saveReservation(carId, reservationRequest);
+
+        Map<String, String> map = new HashMap<>();
+        map.put("message", "Reservation Successfully Created");
+        map.put("success", "true");
+
+        return new ResponseEntity<>(map, HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ReservationDTO>> getAllReservation() {
+        List<ReservationDTO> allReservations = reservationService.getAllReservations();
+        return ResponseEntity.ok(allReservations);
+    }
 }
